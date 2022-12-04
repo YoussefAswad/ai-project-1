@@ -5,6 +5,8 @@ public class grid {
 
     cell[][] grid;
 
+    boolean timeAction;
+
     public grid() {
         Random rand = new Random();
         int m = rand.nextInt(5, 16);
@@ -17,6 +19,7 @@ public class grid {
         int[] shipPositions = new int[shipNum];
         int[] stationPositions = new int[stationNum];
         int pos;
+        timeAction = false;
         boolean containsShip;
         boolean containsStation;
 
@@ -55,6 +58,14 @@ public class grid {
             this.addCell(new station((int) Math.floor(i / n), i % n));
         }
 
+    }
+
+    public boolean isTimeAction() {
+        return timeAction;
+    }
+
+    public void setTimeAction(boolean timeAction) {
+        this.timeAction = timeAction;
     }
 
     public void addCell(cell c) {

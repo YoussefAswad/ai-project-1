@@ -5,6 +5,7 @@ public class agent {
     int y;
     int capacity;
     int pickUps;
+    
 
     public agent(int x, int y) {
         this.x = x;
@@ -62,47 +63,62 @@ public class agent {
         }
     }
 
-    public void pickUp(ship ship) {
+
+    public void pickUp(ship ship,grid grid) {
         if ((this.x == ship.getX()) && (this.y == ship.getY())) {
             ship.setPassengerCount(ship.getPassengerCount() - 1);
             setPickUps(getPickUps() + 1);
         }
+        grid.setTimeAction(true);
+
     }
 
-    public void dropPassenger(station station) {
+    public void dropPassenger(station station,grid grid) {
         if ((this.x == station.getX()) && (this.y == station.getY())) {
             setPickUps(getPickUps() - 1);
         }
+        grid.setTimeAction(true);
+
     }
 
-    public void retrieve(wreck wreck) {
+    public void retrieve(wreck wreck,grid grid) {
         if ((this.x == wreck.getX()) && (this.y == wreck.getY())) {
             setPickUps(getPickUps() - 1);
         }
+        grid.setTimeAction(true);
+
     }
 
-    public void moveUp() {
+    public void moveUp(grid grid) {
         if (this.x >= 1) {
             this.x = x + 1;
         }
+        grid.setTimeAction(true);
+
     }
 
     public void moveDown(grid grid) {
         if(this.x <= grid.grid.length -1){
             this.x = x - 1;
         }
+        grid.setTimeAction(true);
+
 
     }
 
-    public void moveLeft() {
+    public void moveLeft(grid grid) {
         if (this.y >= 1) {
             this.y = y + 1;
         }
+        grid.setTimeAction(true);
+
     }
 
     public void moveRight(grid grid) {
         if(this.x <= grid.grid[0].length -1){
             this.x = x - 1;
         }
+        grid.setTimeAction(true);
+
     }
 }
