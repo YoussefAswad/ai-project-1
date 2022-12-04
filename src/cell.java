@@ -4,7 +4,7 @@ public class cell {
 
     public cell(int x, int y) {
         this.x = x;
-        this.y = x;
+        this.y = y;
     }
 
     public int getX() {

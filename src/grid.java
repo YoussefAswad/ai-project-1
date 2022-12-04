@@ -47,17 +47,18 @@ public class grid {
         System.out.println("Size: " + this.grid.length + "*" + this.grid[0].length);
 
         for (int i : shipPositions) {
-            this.addCell(new ship(i / m, i % n));
+            this.addCell(new ship((int) Math.floor(i / n), i % n));
+
         }
 
         for (int i : stationPositions) {
-            this.addCell(new station(i / m, i % n));
+            this.addCell(new station((int) Math.floor(i / n), i % n));
         }
 
     }
 
     public void addCell(cell c) {
-        grid[c.getX()][c.getY()] = c;
+        this.grid[c.getX()][c.getY()] = c;
     }
 
     public static void printArray(int[] arr) {
