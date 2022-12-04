@@ -19,7 +19,6 @@ public class ship extends cell {
 
     @Override
     public String toString() {
-        // TODO Auto-generated method stub
-        return "Ship:" + this.passengerCount;
+        return this.x + "," + this.y + "," + this.passengerCount;
     }
 }

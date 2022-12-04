@@ -4,11 +4,14 @@ import java.util.stream.IntStream;
 public class grid {
 
     cell[][] grid;
+    int m;
+    int n;
+    agent agent;
 
     public grid() {
         Random rand = new Random();
-        int m = rand.nextInt(5, 16);
-        int n = rand.nextInt(5, 16);
+        this.m = rand.nextInt(5, 16);
+        this.n = rand.nextInt(5, 16);
         this.grid = new cell[m][n];
         int occupiedNum = rand.nextInt(2, m * n);
         int shipNum = rand.nextInt(1, occupiedNum);
@@ -24,7 +27,7 @@ public class grid {
             do {
                 pos = rand.nextInt(0, m * n);
                 int curr = pos;
-                containsShip = IntStream.of(shipNum).anyMatch(x -> x == curr);
+                containsShip = IntStream.of(shipPositions).anyMatch(x -> x == curr);
             } while (containsShip);
             shipPositions[i] = pos;
         }
@@ -33,8 +36,8 @@ public class grid {
             do {
                 pos = rand.nextInt(0, m * n);
                 int curr = pos;
-                containsShip = IntStream.of(shipNum).anyMatch(x -> x == curr);
-                containsStation = IntStream.of(shipNum).anyMatch(x -> x == curr);
+                containsShip = IntStream.of(shipPositions).anyMatch(x -> x == curr);
+                containsStation = IntStream.of(stationPositions).anyMatch(x -> x == curr);
             } while (containsShip && containsStation);
             stationPositions[i] = pos;
         }
@@ -54,7 +57,13 @@ public class grid {
         for (int i : stationPositions) {
             this.addCell(new station((int) Math.floor(i / n), i % n));
         }
-
+        do {
+            pos = rand.nextInt(0, m * n);
+            int curr = pos;
+            containsShip = IntStream.of(shipPositions).anyMatch(x -> x == curr);
+            containsStation = IntStream.of(stationPositions).anyMatch(x -> x == curr);
+        } while (containsShip && containsStation);
+        this.agent = new agent((int) Math.floor(pos / n), pos % n);
     }
 
     public void addCell(cell c) {
@@ -70,15 +79,33 @@ public class grid {
 
     @Override
     public String toString() {
-        String s = "";
-        for (cell[] row : this.grid) {
-            for (cell cell : row) {
-                s = s + cell + "\t";
+        // String s = "";
+        // for (cell[] row : this.grid) {
+        // for (cell cell : row) {
+        // s = s + cell + "\t";
+        // }
+        // s = s + "\n";
+        // }
+        String string = this.m + "," + this.n + ";" + this.agent + ";";
+        String stations = "";
+        String ships = "";
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (this.grid[i][j] instanceof station) {
+                    if (!stations.equals(""))
+                        stations = stations + ",";
+                    stations = stations + this.grid[i][j];
+                }
+                if (this.grid[i][j] instanceof ship) {
+                    if (!ships.equals(""))
+                        ships = ships + ",";
+                    ships = ships + this.grid[i][j];
+                }
             }
-            s = s + "\n";
-        }
 
-        return s;
+        }
+        string = string + stations + ";" + ships;
+        return string;
     }
 
     public static void main(String[] args) {

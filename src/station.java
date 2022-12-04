@@ -6,7 +6,6 @@ public class station extends cell {
 
     @Override
     public String toString() {
-        // TODO Auto-generated method stub
-        return "Station";
+        return this.x + "," + this.y;
     }
 }

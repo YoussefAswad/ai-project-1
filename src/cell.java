@@ -26,6 +26,6 @@ public class cell {
     @Override
     public String toString() {
         // TODO Auto-generated method stub
-        return "Cell";
+        return "";
     }
 }
