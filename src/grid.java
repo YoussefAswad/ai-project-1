@@ -19,6 +19,7 @@ public class grid {
         int pos;
         boolean containsShip;
         boolean containsStation;
+
         for (int i = 0; i < shipPositions.length; i++) {
             do {
                 pos = rand.nextInt(0, m * n);
@@ -37,6 +38,21 @@ public class grid {
             } while (containsShip && containsStation);
             stationPositions[i] = pos;
         }
+        System.out.println("Size: " + m + "*" + n);
+        for (int i = 0; i < this.grid.length; i++) {
+            for (int j = 0; j < this.grid[i].length; j++) {
+                this.addCell(new cell(i, j));
+            }
+        }
+        System.out.println("Size: " + this.grid.length + "*" + this.grid[0].length);
+
+        for (int i : shipPositions) {
+            this.addCell(new ship(i / m, i % n));
+        }
+
+        for (int i : stationPositions) {
+            this.addCell(new station(i / m, i % n));
+        }
 
     }
 
@@ -51,9 +67,22 @@ public class grid {
         System.out.println();
     }
 
+    @Override
+    public String toString() {
+        String s = "";
+        for (cell[] row : this.grid) {
+            for (cell cell : row) {
+                s = s + cell + "\t";
+            }
+            s = s + "\n";
+        }
+
+        return s;
+    }
+
     public static void main(String[] args) {
         grid grid = new grid();
-
+        System.out.println(grid);
     }
 
 }

@@ -16,4 +16,10 @@ public class ship extends cell {
     public void setPassengerCount(int passengerCount) {
         this.passengerCount = passengerCount;
     }
+
+    @Override
+    public String toString() {
+        // TODO Auto-generated method stub
+        return "Ship:" + this.passengerCount;
+    }
 }

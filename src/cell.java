@@ -23,4 +23,9 @@ public class cell {
         this.y = y;
     }
 
+    @Override
+    public String toString() {
+        // TODO Auto-generated method stub
+        return "Cell";
+    }
 }
