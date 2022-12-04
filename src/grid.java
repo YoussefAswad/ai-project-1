@@ -15,13 +15,45 @@ public class grid {
         int stationNum = occupiedNum - shipNum;
 
         int[] shipPositions = new int[shipNum];
+        int[] stationPositions = new int[stationNum];
+        int pos;
+        boolean containsShip;
+        boolean containsStation;
         for (int i = 0; i < shipPositions.length; i++) {
-            int pos = rand.nextInt(0, m * n);
-            boolean contains = IntStream.of(shipNum).anyMatch(x -> x == pos);
+            do {
+                pos = rand.nextInt(0, m * n);
+                int curr = pos;
+                containsShip = IntStream.of(shipNum).anyMatch(x -> x == curr);
+            } while (containsShip);
+            shipPositions[i] = pos;
         }
+
+        for (int i = 0; i < stationPositions.length; i++) {
+            do {
+                pos = rand.nextInt(0, m * n);
+                int curr = pos;
+                containsShip = IntStream.of(shipNum).anyMatch(x -> x == curr);
+                containsStation = IntStream.of(shipNum).anyMatch(x -> x == curr);
+            } while (containsShip && containsStation);
+            stationPositions[i] = pos;
+        }
+
     }
 
     public void addCell(cell c) {
         grid[c.getX()][c.getY()] = c;
     }
+
+    public static void printArray(int[] arr) {
+        for (int i : arr) {
+            System.out.print(i + ", ");
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        grid grid = new grid();
+
+    }
+
 }
