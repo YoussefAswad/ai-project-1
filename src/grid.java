@@ -1,4 +1,5 @@
 import java.util.Random;
+import java.util.stream.IntStream;
 
 public class grid {
 
@@ -12,6 +13,12 @@ public class grid {
         int occupiedNum = rand.nextInt(2, m * n);
         int shipNum = rand.nextInt(1, occupiedNum);
         int stationNum = occupiedNum - shipNum;
+
+        int[] shipPositions = new int[shipNum];
+        for (int i = 0; i < shipPositions.length; i++) {
+            int pos = rand.nextInt(0, m * n);
+            boolean contains = IntStream.of(shipNum).anyMatch(x -> x == pos);
+        }
     }
 
     public void addCell(cell c) {
