@@ -2,20 +2,26 @@ package code;
 
 import java.util.Random;
 
-public class agent {
+public class Agent {
     int x;
     int y;
     int capacity;
     int pickUps;
 
-    public agent(int x, int y) {
+    public Agent(int x, int y) {
         this.x = x;
         this.y = y;
         Random rand = new Random();
         this.capacity = rand.nextInt(30, 101);
         this.pickUps = 0;
     }
-
+    public Agent(int x, int y, int capacity) {
+        this.x = x;
+        this.y = y;
+        Random rand = new Random();
+        this.capacity = capacity;
+        this.pickUps = 0;
+    }
     public int getX() {
         return x;
     }

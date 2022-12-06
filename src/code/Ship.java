@@ -11,6 +11,10 @@ public class Ship extends Cell {
         this.passengerCount = (new Random()).nextInt(100) + 1;
     }
 
+    public Ship(int x, int y ,int passengerCount) {
+        super(x, y);
+        this.passengerCount = passengerCount;
+    }
     public int getPassengerCount() {
         return passengerCount;
     }

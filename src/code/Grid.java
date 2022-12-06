@@ -8,7 +8,7 @@ public class Grid {
     Cell[][] grid;
     int m;
     int n;
-    agent agent;
+    Agent agent;
 
     boolean timeAction;
 
@@ -68,7 +68,35 @@ public class Grid {
             containsShip = IntStream.of(shipPositions).anyMatch(x -> x == curr);
             containsStation = IntStream.of(stationPositions).anyMatch(x -> x == curr);
         } while (containsShip && containsStation);
-        this.agent = new agent((int) Math.floor(pos / n), pos % n);
+        this.agent = new Agent((int) Math.floor(pos / n), pos % n);
+    }
+
+    public Grid(String input){
+        String[] gridElements = input.split(";");
+        String[] gridSize = gridElements[0].split(",");
+        this.m = Integer.parseInt(gridSize[0]);
+        this.n = Integer.parseInt(gridSize[1]);
+        this.grid= new Cell[this.m][this.n];
+        for (int i = 0; i < this.grid.length; i++) {
+            for (int j = 0; j < this.grid[i].length; j++) {
+                this.addCell(new Cell(i, j));
+            }
+        }
+        String[] agentLoc = gridElements[2].split(",");
+        this.agent = new Agent(Integer.parseInt(agentLoc[0]), Integer.parseInt(agentLoc[1]),Integer.parseInt(gridElements[1]));
+        String[] stations = gridElements[3].split(",");
+        for (int i = 0; i < stations.length; i+=2){
+            this.addCell(new Station(Integer.parseInt(stations[i]), Integer.parseInt(stations[i+1])));
+        }
+        String[] ships = gridElements[4].split(",");
+        System.out.println(ships.length);
+        for (int i = 0; i < ships.length; i+=3){
+
+            this.addCell(new Ship(Integer.parseInt(ships[i]), Integer.parseInt(ships[i+1]),Integer.parseInt(ships[i+2])));
+            System.out.println(i);
+
+
+        }
     }
 
     public boolean isTimeAction() {
@@ -117,13 +145,21 @@ public class Grid {
             }
 
         }
-        string = string + stations + ";" + ships;
+        string = string + stations + ";" + ships +";";
         return string;
     }
 
     public static void main(String[] args) {
         Grid grid = new Grid();
-        System.out.println(grid);
+        String test = "10,6;59;1,7;0,0,2,2,3,0,5,3;1,3,69,3,4,80,4,7,94,4,9,14,5,2,39;";
+        Grid grid1 = new Grid(test);
+        if (grid1.toString().equals(test)){
+            System.out.println(true);
+        }
+        else {
+            System.out.println(false);
+        }
+        System.out.println(grid1);
     }
 
 }
