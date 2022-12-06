@@ -1,6 +1,8 @@
-public class station extends cell {
+package code;
 
-    public station(int x, int y) {
+public class Station extends Cell {
+
+    public Station(int x, int y) {
         super(x, y);
     }
 

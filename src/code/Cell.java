@@ -1,8 +1,10 @@
-public class cell {
+package code;
+
+public class Cell {
     int x;
     int y;
 
-    public cell(int x, int y) {
+    public Cell(int x, int y) {
         this.x = x;
         this.y = y;
     }

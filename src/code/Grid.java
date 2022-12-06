@@ -1,20 +1,22 @@
+package code;
+
 import java.util.Random;
 import java.util.stream.IntStream;
 
-public class grid {
+public class Grid {
 
-    cell[][] grid;
+    Cell[][] grid;
     int m;
     int n;
     agent agent;
 
     boolean timeAction;
 
-    public grid() {
+    public Grid() {
         Random rand = new Random();
         this.m = rand.nextInt(5, 16);
         this.n = rand.nextInt(5, 16);
-        this.grid = new cell[m][n];
+        this.grid = new Cell[m][n];
         int occupiedNum = rand.nextInt(2, m * n);
         int shipNum = rand.nextInt(1, occupiedNum);
         int stationNum = occupiedNum - shipNum;
@@ -47,18 +49,18 @@ public class grid {
         System.out.println("Size: " + m + "*" + n);
         for (int i = 0; i < this.grid.length; i++) {
             for (int j = 0; j < this.grid[i].length; j++) {
-                this.addCell(new cell(i, j));
+                this.addCell(new Cell(i, j));
             }
         }
         System.out.println("Size: " + this.grid.length + "*" + this.grid[0].length);
 
         for (int i : shipPositions) {
-            this.addCell(new ship((int) Math.floor(i / n), i % n));
+            this.addCell(new Ship((int) Math.floor(i / n), i % n));
 
         }
 
         for (int i : stationPositions) {
-            this.addCell(new station((int) Math.floor(i / n), i % n));
+            this.addCell(new Station((int) Math.floor(i / n), i % n));
         }
         do {
             pos = rand.nextInt(0, m * n);
@@ -77,7 +79,7 @@ public class grid {
         this.timeAction = timeAction;
     }
 
-    public void addCell(cell c) {
+    public void addCell(Cell c) {
         this.grid[c.getX()][c.getY()] = c;
     }
 
@@ -91,9 +93,9 @@ public class grid {
     @Override
     public String toString() {
         // String s = "";
-        // for (cell[] row : this.grid) {
-        // for (cell cell : row) {
-        // s = s + cell + "\t";
+        // for (code.cell[] row : this.code.grid) {
+        // for (code.cell code.cell : row) {
+        // s = s + code.cell + "\t";
         // }
         // s = s + "\n";
         // }
@@ -102,12 +104,12 @@ public class grid {
         String ships = "";
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
-                if (this.grid[i][j] instanceof station) {
+                if (this.grid[i][j] instanceof Station) {
                     if (!stations.equals(""))
                         stations = stations + ",";
                     stations = stations + this.grid[i][j];
                 }
-                if (this.grid[i][j] instanceof ship) {
+                if (this.grid[i][j] instanceof Ship) {
                     if (!ships.equals(""))
                         ships = ships + ",";
                     ships = ships + this.grid[i][j];
@@ -120,7 +122,7 @@ public class grid {
     }
 
     public static void main(String[] args) {
-        grid grid = new grid();
+        Grid grid = new Grid();
         System.out.println(grid);
     }
 

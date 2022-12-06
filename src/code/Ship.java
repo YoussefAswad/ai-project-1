@@ -1,10 +1,12 @@
+package code;
+
 import java.util.Random;
 
-public class ship extends cell {
+public class Ship extends Cell {
 
     int passengerCount;
 
-    public ship(int x, int y) {
+    public Ship(int x, int y) {
         super(x, y);
         this.passengerCount = (new Random()).nextInt(100) + 1;
     }

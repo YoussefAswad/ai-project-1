@@ -1,8 +1,10 @@
-public class wreck extends cell {
+package code;
+
+public class Wreck extends Cell {
 
     int blackbox;
 
-    public wreck(int x, int y) {
+    public Wreck(int x, int y) {
         super(x, y);
         this.blackbox = 20;
     }

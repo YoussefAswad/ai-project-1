@@ -1,3 +1,5 @@
+package code;
+
 import java.util.Random;
 
 public class agent {
@@ -68,7 +70,7 @@ public class agent {
         }
     }
 
-    public void pickUp(ship ship, grid grid) {
+    public void pickUp(Ship ship, Grid grid) {
         if ((this.x == ship.getX()) && (this.y == ship.getY())) {
             ship.setPassengerCount(ship.getPassengerCount() - 1);
             setPickUps(getPickUps() + 1);
@@ -77,7 +79,7 @@ public class agent {
 
     }
 
-    public void dropPassenger(station station, grid grid) {
+    public void dropPassenger(Station station, Grid grid) {
         if ((this.x == station.getX()) && (this.y == station.getY())) {
             setPickUps(getPickUps() - 1);
         }
@@ -85,7 +87,7 @@ public class agent {
 
     }
 
-    public void retrieve(wreck wreck, grid grid) {
+    public void retrieve(Wreck wreck, Grid grid) {
         if ((this.x == wreck.getX()) && (this.y == wreck.getY())) {
             setPickUps(getPickUps() - 1);
         }
@@ -93,7 +95,7 @@ public class agent {
 
     }
 
-    public void moveUp(grid grid) {
+    public void moveUp(Grid grid) {
         if (this.x >= 1) {
             this.x = x + 1;
         }
@@ -101,7 +103,7 @@ public class agent {
 
     }
 
-    public void moveDown(grid grid) {
+    public void moveDown(Grid grid) {
         if (this.x <= grid.grid.length - 1) {
             this.x = x - 1;
         }
@@ -109,7 +111,7 @@ public class agent {
 
     }
 
-    public void moveLeft(grid grid) {
+    public void moveLeft(Grid grid) {
         if (this.y >= 1) {
             this.y = y + 1;
         }
@@ -117,7 +119,7 @@ public class agent {
 
     }
 
-    public void moveRight(grid grid) {
+    public void moveRight(Grid grid) {
         if (this.x <= grid.grid[0].length - 1) {
             this.x = x - 1;
         }
