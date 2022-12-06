@@ -17,6 +17,15 @@ public class ship extends cell {
         this.passengerCount = passengerCount;
     }
 
+    public boolean isEmpty(){
+        if(this.passengerCount <= 0){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     @Override
     public String toString() {
         return this.x + "," + this.y + "," + this.passengerCount;
