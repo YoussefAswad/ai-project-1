@@ -1,6 +1,9 @@
 package code;
 
-public class Cell {
+import java.io.Serializable;
+import java.util.Objects;
+
+public class Cell implements Cloneable, Serializable {
     int x;
     int y;
 
@@ -8,7 +11,11 @@ public class Cell {
         this.x = x;
         this.y = y;
     }
-
+    @Override
+    public Object clone() throws CloneNotSupportedException
+    {
+        return super.clone();
+    }
     public int getX() {
         return x;
     }
@@ -27,7 +34,17 @@ public class Cell {
 
     @Override
     public String toString() {
-        // TODO Auto-generated method stub
-        return "";
+        return this.x + "," + this.y;
+    }
+    @Override
+    public boolean equals(Object o){
+        if (getClass() != o.getClass())
+            return false;
+        Cell c = (Cell) o;
+        return c.x == this.x & c.y == this.y;
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(x,y);
     }
 }

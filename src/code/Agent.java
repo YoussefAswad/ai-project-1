@@ -1,12 +1,15 @@
 package code;
 
+import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Random;
 
-public class Agent {
+public class Agent implements Cloneable, Serializable {
     int x;
     int y;
     int capacity;
     int pickUps;
+    int blackBoxes;
 
     public Agent(int x, int y) {
         this.x = x;
@@ -14,14 +17,17 @@ public class Agent {
         Random rand = new Random();
         this.capacity = rand.nextInt(30, 101);
         this.pickUps = 0;
+        this.blackBoxes = 0;
     }
+
     public Agent(int x, int y, int capacity) {
         this.x = x;
         this.y = y;
-        Random rand = new Random();
         this.capacity = capacity;
         this.pickUps = 0;
+        this.blackBoxes = 0;
     }
+
     public int getX() {
         return x;
     }
@@ -47,6 +53,12 @@ public class Agent {
     }
 
     @Override
+    public Agent clone() throws CloneNotSupportedException
+    {
+        return (Agent) super.clone();
+    }
+
+    @Override
     public String toString() {
 
         return this.capacity + ";" + this.x + "," + this.y;
@@ -61,7 +73,7 @@ public class Agent {
     }
 
     public boolean isFull() {
-        if (getPickUps() > capacity) {
+        if (getPickUps() == capacity) {
             return true;
         } else {
             return false;
@@ -69,67 +81,65 @@ public class Agent {
     }
 
     public boolean isEmpty() {
-        if (getPickUps() <= capacity) {
+        if (getPickUps() <= 0) {
             return true;
         } else {
             return false;
         }
     }
 
-    public void pickUp(Ship ship, Grid grid) {
-        if ((this.x == ship.getX()) && (this.y == ship.getY())) {
-            ship.setPassengerCount(ship.getPassengerCount() - 1);
-            setPickUps(getPickUps() + 1);
-        }
-        grid.setTimeAction(true);
+    public void pickup(HashMap<Cell,Integer> ships) {
+        Cell c = new Cell(x,y);
+            if(ships.get(new Cell(x,y)) <= this.capacity - this.pickUps){
+                this.pickUps += ships.get(c);
+                ships.replace(c,0);
+            }
+            else {
+                ships.replace(c,ships.get(c)-(this.capacity - this.pickUps));
+                this.pickUps = capacity;
+            }
+    }
+
+    public void drop(HashMap<Cell,Integer> stations) {
+        Cell c = new Cell(x,y);
+            stations.replace(c,stations.get(c) + this.pickUps);
+            setPickUps(0);
+    }
+
+    public void retrieve(HashMap<Cell,Integer> wrecks) {
+        Cell c = new Cell(x,y);
+            wrecks.replace(c,0);
+            this.blackBoxes ++;
+    }
+
+    public void up() {
+            this.x = x - 1;
 
     }
 
-    public void dropPassenger(Station station, Grid grid) {
-        if ((this.x == station.getX()) && (this.y == station.getY())) {
-            setPickUps(getPickUps() - 1);
-        }
-        grid.setTimeAction(true);
-
-    }
-
-    public void retrieve(Wreck wreck, Grid grid) {
-        if ((this.x == wreck.getX()) && (this.y == wreck.getY())) {
-            setPickUps(getPickUps() - 1);
-        }
-        grid.setTimeAction(true);
-
-    }
-
-    public void moveUp(Grid grid) {
-        if (this.x >= 1) {
+    public void down() {
             this.x = x + 1;
-        }
-        grid.setTimeAction(true);
+
 
     }
 
-    public void moveDown(Grid grid) {
-        if (this.x <= grid.grid.length - 1) {
-            this.x = x - 1;
-        }
-        grid.setTimeAction(true);
+    public void left() {
+
+            this.y = y - 1;
+
 
     }
 
-    public void moveLeft(Grid grid) {
-        if (this.y >= 1) {
+    public void right() {
             this.y = y + 1;
-        }
-        grid.setTimeAction(true);
 
     }
-
-    public void moveRight(Grid grid) {
-        if (this.x <= grid.grid[0].length - 1) {
-            this.x = x - 1;
-        }
-        grid.setTimeAction(true);
-
+    @Override
+    public boolean equals(Object o){
+        if (getClass() != o.getClass())
+            return false;
+        Agent a = (Agent) o;
+        return this.capacity == capacity && this.x == a.x && this.y == a.y && this.pickUps == a.pickUps && a.blackBoxes == this.blackBoxes;
     }
+
 }
