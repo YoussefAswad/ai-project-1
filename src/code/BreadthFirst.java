@@ -4,8 +4,9 @@ import java.util.*;
 
 public class BreadthFirst extends SearchStrategy {
     // HashMap<String, Vector<Comparable<World>>> visited;
-    HashSet<TreeNode> visited;
+    HashSet<String> visited;
     String[] operators;
+    int nodesExpanded;
     World worldRoot;
 
     BreadthFirst(String[] operators, World worldRoot) {
@@ -23,18 +24,20 @@ public class BreadthFirst extends SearchStrategy {
 
     public String search() throws CloneNotSupportedException {
 
-        Queue<TreeNode> queue = new LinkedList<>();
+        Queue<String> queue = new LinkedList<>();
         for (String operator : operators) {
             if (worldRoot.validateOperator(operator))
-                queue.add(new TreeNode(worldRoot.clone(), operator));
+                queue.add((new TreeNode(worldRoot.clone(), operator)).toString());
         }
+        String st;
         TreeNode s;
         while (!queue.isEmpty()) {
-            s = queue.remove();
-            s.nodesExpanded++;
+            st = queue.remove();
+            s = new TreeNode(st);
+            nodesExpanded++;
             if (s.world.worldEnd()) {
-                System.out.println(s.plan + ";" + s.world.deaths + ";" + s.world.agent.blackBoxes + ";" + s.nodesExpanded + ";");
-                return s.plan + ";" + s.world.deaths + ";" + s.world.agent.blackBoxes + ";" + s.nodesExpanded;
+                System.out.println(s.plan + ";" + s.world.deaths + ";" + s.world.agent.retrieved + ";" + nodesExpanded + ";");
+                return s.plan + ";" + s.world.deaths + ";" + s.world.agent.retrieved + ";" + nodesExpanded;
             }
             s.world.execOperator(s.operator);
             if (!s.plan.equals(""))
@@ -45,14 +48,14 @@ public class BreadthFirst extends SearchStrategy {
             Vector<TreeNode> vec = new Vector<>();
             for (String operator : operators) {
                 if (s.world.validateOperator(operator))
-                    vec.add(new TreeNode(s.world.clone(), operator,s.plan,s.nodesExpanded));
+                    vec.add(new TreeNode(s.world.clone(), operator,s.plan));
             }
             Iterator<TreeNode> i = vec.iterator();
             while (i.hasNext()) {
                 TreeNode n = i.next();
-                if (visited.add(n)) {
+                if (visited.add(n.toString())) {
                     //visited.add(n.clone());
-                    queue.add(n);
+                    queue.add(n.toString());
                 }
             }
         }

@@ -13,17 +13,11 @@ public class World implements Comparable, Cloneable, Serializable {
 
     int m;
     int n;
-    int shipNum;
-    int wreckNum;
-    int stationNum;
     int deaths;
     Agent agent;
 
     public World() {
-        this.shipNum = 0;
         this.deaths = 0;
-        this.wreckNum = 0;
-        this.stationNum = 0;
         Random rand = new Random();
         this.m = rand.nextInt(5, 16);
         this.n = rand.nextInt(5, 16);
@@ -84,10 +78,9 @@ public class World implements Comparable, Cloneable, Serializable {
     }
 
     public World(String input) {
-        this.shipNum = 0;
-        this.wreckNum = 0;
+
         this.deaths = 0;
-        this.stationNum = 0;
+
         this.ships = new HashMap<>();
         this.wrecks = new HashMap<>();
         this.stations = new HashMap<>();
@@ -105,27 +98,48 @@ public class World implements Comparable, Cloneable, Serializable {
                 Integer.parseInt(gridElements[1]));
         String[] stations = gridElements[3].split(",");
         for (int i = 0; i < stations.length; i += 2) {
-            this.addCell(new Cell(Integer.parseInt(stations[i]), Integer.parseInt(stations[i + 1])),0,"station");
+            this.addCell(new Cell(Integer.parseInt(stations[i]), Integer.parseInt(stations[i + 1])), 0, "station");
         }
-        String[] ships = gridElements[4].split(",");
-        for (int i = 0; i < ships.length; i += 3) {
+        if(gridElements.length > 4){
+        if (!gridElements[4].equals("")) {
+            String[] ships = gridElements[4].split(",");
+            for (int i = 0; i < ships.length; i += 3) {
 
-            this.addCell(new Cell(Integer.parseInt(ships[i]), Integer.parseInt(ships[i + 1])),
-                    (Integer.parseInt(ships[i + 2])),"ship");
+                this.addCell(new Cell(Integer.parseInt(ships[i]), Integer.parseInt(ships[i + 1])),
+                        (Integer.parseInt(ships[i + 2])), "ship");
 
+            }
         }
+        if (gridElements.length >= 6) {
+            if (!gridElements[5].equals("")) {
+                String[] wrecks = gridElements[5].split(",");
+                for (int i = 0; i < wrecks.length; i += 3) {
+
+                    this.addCell(new Cell(Integer.parseInt(wrecks[i]), Integer.parseInt(wrecks[i + 1])),
+                            (Integer.parseInt(wrecks[i + 2])), "wreck");
+
+                }
+            }
+        }
+        if (gridElements.length >= 7) {
+            String[] misc = gridElements[6].split(",");
+            agent.onBoard = Integer.parseInt(misc[0]);
+            agent.retrieved = Integer.parseInt(misc[1]);
+            this.deaths = Integer.parseInt(misc[2]);
+        }
+
+    }
     }
 
     public void addCell(Cell c, int o,String type) {
         if (type.equals("wreck")) {
-            this.wreckNum++;
+
             this.wrecks.put(c,  o);
         } else if (type.equals("ship")) {
-            this.shipNum++;
+
             this.ships.put(c, o);
 
         } else if (type.equals("station")) {
-            this.stationNum++;
             this.stations.put(c, o);
         }
     }
@@ -138,7 +152,7 @@ public class World implements Comparable, Cloneable, Serializable {
     }
 
     public boolean worldEnd() {
-        if (wreckNum == 0 && shipNum == 0)
+        if (wrecks.isEmpty()&& ships.isEmpty() && agent.isEmpty())
             return true;
         return false;
     }
@@ -235,26 +249,42 @@ public class World implements Comparable, Cloneable, Serializable {
 //                }
 //            }
 //        }
-        Iterator<Map.Entry<Cell,Integer>> iter = ships.entrySet().iterator();
-        while (iter.hasNext()) {
-            Map.Entry<Cell,Integer> entry = iter.next();
+//        Iterator<Map.Entry<Cell,Integer>> iter = ships.entrySet().iterator();
+//        while (iter.hasNext()) {
+//            Map.Entry<Cell,Integer> entry = iter.next();
+//            ships.replace(entry.getKey(),entry.getValue()-1);
+//            deaths++;
+//            if (entry.getValue() <= 0){
+//                this.addCell(entry.getKey(),20,"wreck");
+//                this.ships.remove(entry.getKey());
+//                shipNum--;
+//            }
+//        }
+
+        for(Map.Entry<Cell, Integer> entry : this.ships.entrySet()){
             ships.replace(entry.getKey(),entry.getValue()-1);
-            deaths++;
             if (entry.getValue() <= 0){
                 this.addCell(entry.getKey(),20,"wreck");
                 this.ships.remove(entry.getKey());
-                shipNum--;
             }
         }
-        Iterator<Map.Entry<Cell,Integer>> iter2 = wrecks.entrySet().iterator();
-        while (iter2.hasNext()) {
-            Map.Entry<Cell,Integer> entry = iter2.next();
 
+//        Iterator<Map.Entry<Cell,Integer>> iter2 = wrecks.entrySet().iterator();
+//        while (iter2.hasNext()) {
+//            Map.Entry<Cell,Integer> entry = iter2.next();
+//
+//            wrecks.replace(entry.getKey(),entry.getValue()-1);
+//            deaths++;
+//            if (entry.getValue() <= 0){
+//                this.wrecks.remove(entry.getKey());
+//                wreckNum--;
+//            }
+//        }
+        for(Map.Entry<Cell, Integer> entry : this.wrecks.entrySet()){
             wrecks.replace(entry.getKey(),entry.getValue()-1);
             deaths++;
             if (entry.getValue() <= 0){
                 this.wrecks.remove(entry.getKey());
-                wreckNum--;
             }
         }
     }
@@ -344,22 +374,44 @@ public class World implements Comparable, Cloneable, Serializable {
         String string = this.m + "," + this.n + ";" + this.agent + ";";
         String stations = "";
         String ships = "";
-        Iterator<Map.Entry<Cell,Integer>> iter1 = this.stations.entrySet().iterator();
-        while (iter1.hasNext()) {
-            Map.Entry<Cell,Integer> entry = iter1.next();
+        String wrecks= "";
+//        Iterator<Map.Entry<Cell,Integer>> iter1 = this.stations.entrySet().iterator();
+//        while (iter1.hasNext()) {
+//            Map.Entry<Cell,Integer> entry = iter1.next();
+//            if (!stations.equals(""))
+//                stations = stations + ",";
+//            stations = stations + entry.getKey();
+//        }
+
+        for(Map.Entry<Cell, Integer> entry : this.stations.entrySet()){
+
             if (!stations.equals(""))
                 stations = stations + ",";
             stations = stations + entry.getKey();
         }
-        Iterator<Map.Entry<Cell,Integer>> iter2 = this.ships.entrySet().iterator();
-        while (iter2.hasNext()) {
-            Map.Entry<Cell,Integer> entry = iter2.next();
+
+//        Iterator<Map.Entry<Cell,Integer>> iter2 = this.ships.entrySet().iterator();
+//        while (iter2.hasNext()) {
+//            Map.Entry<Cell,Integer> entry = iter2.next();
+//            if (!ships.equals(""))
+//                ships = ships + ",";
+//            ships = ships + entry.getKey()+","+entry.getValue();
+//
+//        }
+
+        for(Map.Entry<Cell, Integer> entry : this.ships.entrySet()){
             if (!ships.equals(""))
                 ships = ships + ",";
             ships = ships + entry.getKey()+","+entry.getValue();
-
         }
-        string = string + stations + ";" + ships + ";";
+        for(Map.Entry<Cell, Integer> entry : this.wrecks.entrySet()){
+
+            if (!wrecks.equals(""))
+                wrecks = wrecks + ",";
+            wrecks = wrecks + entry.getKey()+","+entry.getValue();
+        }
+        String misc = agent.onBoard +"," +agent.retrieved +"," +this.deaths;
+        string = string + stations + ";" + ships + ";"+wrecks +";"+ misc;
         return string;
     }
 
@@ -376,51 +428,85 @@ public class World implements Comparable, Cloneable, Serializable {
         if (getClass() != o.getClass())
             return false;
         World w = (World) o;
-        Iterator<Map.Entry<Cell,Integer>> iter1 = stations.entrySet().iterator();
-        while (iter1.hasNext()) {
-            Map.Entry<Cell,Integer> entry = iter1.next();
-            if(w.stations.containsKey(entry.getKey())){
-                if (!w.stations.get(entry.getKey()).equals(entry.getValue()))
-                    return false;
-            }
-            else {
-                return false;
-            }
-        }
-        Iterator<Map.Entry<Cell,Integer>> iter2 = wrecks.entrySet().iterator();
-        while (iter2.hasNext()) {
-            Map.Entry<Cell,Integer> entry = iter2.next();
-            if(w.wrecks.containsKey(entry.getKey())){
-                if (!w.wrecks.get(entry.getKey()).equals(entry.getValue()))
-                    return false;
-            }
-            else {
-                return false;
-            }
-        }
-        Iterator<Map.Entry<Cell,Integer>> iter3 = ships.entrySet().iterator();
-        while (iter3.hasNext()) {
-            Map.Entry<Cell,Integer> entry = iter3.next();
-            if(w.ships.containsKey(entry.getKey())){
-                if (!w.ships.get(entry.getKey()).equals(entry.getValue()))
-                    return false;
-            }
-            else {
-                return false;
-            }
-        }
-        return (this.m == w.m) && (this.n == w.n) && (this.shipNum == w.shipNum)
-                && (this.wreckNum == w.wreckNum) && (this.stationNum == w.stationNum) && (this.agent.equals(w.agent));
+//        Iterator<Map.Entry<Cell,Integer>> iter1 = stations.entrySet().iterator();
+//        while (iter1.hasNext()) {
+//            Map.Entry<Cell,Integer> entry = iter1.next();
+//            if(w.stations.containsKey(entry.getKey())){
+//                if (!w.stations.get(entry.getKey()).equals(entry.getValue()))
+//                    return false;
+//            }
+//            else {
+//                return false;
+//            }
+//        }
+
+//        Iterator<Map.Entry<Cell,Integer>> iter2 = wrecks.entrySet().iterator();
+//        while (iter2.hasNext()) {
+//            Map.Entry<Cell,Integer> entry = iter2.next();
+//            if(w.wrecks.containsKey(entry.getKey())){
+//                if (!w.wrecks.get(entry.getKey()).equals(entry.getValue()))
+//                    return false;
+//            }
+//            else {
+//                return false;
+//            }
+//        }
+
+//        Iterator<Map.Entry<Cell,Integer>> iter3 = ships.entrySet().iterator();
+//        while (iter3.hasNext()) {
+//            Map.Entry<Cell,Integer> entry = iter3.next();
+//            if(w.ships.containsKey(entry.getKey())){
+//                if (!w.ships.get(entry.getKey()).equals(entry.getValue()))
+//                    return false;
+//            }
+//            else {
+//                return false;
+//            }
+//        }
+
+
+
+
+//        for(Map.Entry<Cell, Integer> entry : this.stations.entrySet()){
+//            if(w.stations.containsKey(entry.getKey())){
+//                if (!w.stations.get(entry.getKey()).equals(entry.getValue()))
+//                    return false;
+//            }
+//            else {
+//                return false;
+//            }
+//        }
+//        for(Map.Entry<Cell, Integer> entry : this.wrecks.entrySet()){
+//            if(w.wrecks.containsKey(entry.getKey())){
+//                if (!w.wrecks.get(entry.getKey()).equals(entry.getValue()))
+//                    return false;
+//            }
+//            else {
+//                return false;
+//            }
+//        }
+//        for(Map.Entry<Cell, Integer> entry : this.ships.entrySet()){
+//            if(w.ships.containsKey(entry.getKey())){
+//                if (!w.ships.get(entry.getKey()).equals(entry.getValue()))
+//                    return false;
+//            }
+//            else {
+//                return false;
+//            }
+//        }
+
+        return this.ships.equals(w.ships) && this.stations.equals(w.stations) && this.wrecks.equals(w.wrecks) &&(this.m == w.m) && (this.n == w.n) && (this.agent.equals(w.agent));
     }
 
     public static void main(String[] args) {
         String testa0 = "5,6;50;0,1;0,4,3,3;1,1,90;";
+        String et = "5,6;50;0,1;3,3,0,4;1,1,90;4,3,20";
         World world = new World(testa0);
+        HashSet<TreeNode> h = new HashSet<>();
         TreeNode tn = new TreeNode(world,"left");
         try {
             TreeNode tn2 = tn.clone();
-            System.out.println(tn.hashCode());
-            System.out.println(tn2.hashCode());
+            System.out.println(tn.world.toString());
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
         }

@@ -7,19 +7,36 @@ public class TreeNode implements Cloneable, Serializable {
 
     World world;
     String plan;
-    int nodesExpanded;
     String operator;
 
     public TreeNode(World world, String operator){
         this.world = world;
-        this.nodesExpanded = 0;
+        //this.nodesExpanded = 0;
         this.operator = operator;
         this.plan = "";
     }
 
-    public TreeNode(World world, String operator, String plan,int nodesExpanded){
+    public TreeNode(String in){
+        String[] ele = in.split("!");
+        this.world = new World(ele[0]);
+        this.plan = ele[1];
+        //this.nodesExpanded = Integer.parseInt(ele[2]);
+        this.operator = ele[2];
+
+    }
+
+    public TreeNode(String in,String operator){
+        String[] ele = in.split("!");
+        this.world = new World(ele[0]);
+        this.plan = ele[1];
+        //this.nodesExpanded = Integer.parseInt(ele[2]);
+        this.operator = operator;
+
+    }
+
+    public TreeNode(World world, String operator, String plan){
         this.world = world;
-        this.nodesExpanded = nodesExpanded;
+        //this.nodesExpanded = nodesExpanded;
         this.operator = operator;
         this.plan = plan;
     }
@@ -29,7 +46,7 @@ public class TreeNode implements Cloneable, Serializable {
         if (getClass() != o.getClass())
             return false;
         TreeNode n = (TreeNode) o;
-        return (this.world.equals(n.world)) & this.plan.equals(n.plan) & (this.nodesExpanded == n.nodesExpanded) & this.operator.equals(n.operator);
+        return (this.world.equals(n.world)) & this.plan.equals(n.plan) & this.operator.equals(n.operator);
     }
     public String getPlan() {
         return plan;
@@ -47,6 +64,11 @@ public class TreeNode implements Cloneable, Serializable {
     }
     @Override
     public int hashCode() {
-        return Objects.hash(world.wrecks,world.ships,world.stations,world.agent.pickUps,world.agent.blackBoxes,world.agent.x,world.agent.y,world.agent.capacity,world.shipNum, world.wreckNum,world.deaths, operator, nodesExpanded);
+        return Objects.hash(world.toString());
+    }
+
+    @Override
+    public String toString() {
+        return world.toString()+"!"+plan+"!"+operator;
     }
 }

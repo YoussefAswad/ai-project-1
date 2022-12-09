@@ -8,24 +8,24 @@ public class Agent implements Cloneable, Serializable {
     int x;
     int y;
     int capacity;
-    int pickUps;
-    int blackBoxes;
+    int onBoard;
+    int retrieved;
 
     public Agent(int x, int y) {
         this.x = x;
         this.y = y;
         Random rand = new Random();
         this.capacity = rand.nextInt(30, 101);
-        this.pickUps = 0;
-        this.blackBoxes = 0;
+        this.onBoard = 0;
+        this.retrieved = 0;
     }
 
     public Agent(int x, int y, int capacity) {
         this.x = x;
         this.y = y;
         this.capacity = capacity;
-        this.pickUps = 0;
-        this.blackBoxes = 0;
+        this.onBoard = 0;
+        this.retrieved = 0;
     }
 
     public int getX() {
@@ -64,16 +64,16 @@ public class Agent implements Cloneable, Serializable {
         return this.capacity + ";" + this.x + "," + this.y;
     }
 
-    public int getPickUps() {
-        return pickUps;
+    public int getOnBoard() {
+        return onBoard;
     }
 
-    public void setPickUps(int pickUps) {
-        this.pickUps = pickUps;
+    public void setOnBoard(int onBoard) {
+        this.onBoard = onBoard;
     }
 
     public boolean isFull() {
-        if (getPickUps() == capacity) {
+        if (getOnBoard() == capacity) {
             return true;
         } else {
             return false;
@@ -81,7 +81,7 @@ public class Agent implements Cloneable, Serializable {
     }
 
     public boolean isEmpty() {
-        if (getPickUps() <= 0) {
+        if (this.onBoard <= 0) {
             return true;
         } else {
             return false;
@@ -90,26 +90,26 @@ public class Agent implements Cloneable, Serializable {
 
     public void pickup(HashMap<Cell,Integer> ships) {
         Cell c = new Cell(x,y);
-            if(ships.get(new Cell(x,y)) <= this.capacity - this.pickUps){
-                this.pickUps += ships.get(c);
+            if(ships.get(new Cell(x,y)) <= this.capacity - this.onBoard){
+                this.onBoard += ships.get(c);
                 ships.replace(c,0);
             }
             else {
-                ships.replace(c,ships.get(c)-(this.capacity - this.pickUps));
-                this.pickUps = capacity;
+                ships.replace(c,ships.get(c)-(this.capacity - this.onBoard));
+                this.onBoard = capacity;
             }
     }
 
     public void drop(HashMap<Cell,Integer> stations) {
-        Cell c = new Cell(x,y);
-            stations.replace(c,stations.get(c) + this.pickUps);
-            setPickUps(0);
+        //Cell c = new Cell(x,y);
+            //stations.replace(c,stations.get(c) + this.onBoard);
+            setOnBoard(0);
     }
 
     public void retrieve(HashMap<Cell,Integer> wrecks) {
         Cell c = new Cell(x,y);
             wrecks.replace(c,0);
-            this.blackBoxes ++;
+            this.retrieved++;
     }
 
     public void up() {
@@ -139,7 +139,7 @@ public class Agent implements Cloneable, Serializable {
         if (getClass() != o.getClass())
             return false;
         Agent a = (Agent) o;
-        return this.capacity == capacity && this.x == a.x && this.y == a.y && this.pickUps == a.pickUps && a.blackBoxes == this.blackBoxes;
+        return this.capacity == capacity && this.x == a.x && this.y == a.y && this.onBoard == a.onBoard && a.retrieved == this.retrieved;
     }
 
 }
